@@ -16,42 +16,42 @@ class Pin:
 
 class Piggy:
     def __init__(self):
-        print "Piggy::__init__"
+        print("Piggy::__init__")
 
     #set_PWM_dutycycle(user_gpio, dutycycle=0...255)
     def stopCar(self):
-        print datetime.datetime.now(), ": stopCar"
+        print(datetime.datetime.now(), ": stopCar")
         self.p.set_PWM_dutycycle(Pin.FORWARD, 0)
         self.p.set_PWM_dutycycle(Pin.REVERSE, 0)
         self.p.set_PWM_dutycycle(Pin.LEFT, 0)
         self.p.set_PWM_dutycycle(Pin.RIGHT, 0)
 
     def accelerateCar(self, strength):
-        print datetime.datetime.now(), ": accelerateCar: ", strength
+        print(datetime.datetime.now(), ": accelerateCar: ", strength)
         self.p.set_PWM_dutycycle(Pin.REVERSE, 0)
         self.p.set_PWM_dutycycle(Pin.FORWARD, strength)
 
     def reverseCar(self, strength):
-        print datetime.datetime.now(), ": reverseCar: ", strength
+        print(datetime.datetime.now(), ": reverseCar: ", strength)
         self.p.set_PWM_dutycycle(Pin.FORWARD, 0)
         self.p.set_PWM_dutycycle(Pin.REVERSE, strength)
 
     def turnCarLeft(self, strength):
-        print datetime.datetime.now(), ": turnCarLeft: ", strength
+        print(datetime.datetime.now(), ": turnCarLeft: ", strength)
         self.p.set_PWM_dutycycle(Pin.RIGHT, 0)
         self.p.set_PWM_dutycycle(Pin.LEFT, strength)
 
-    def turnCarLeft(self, strength):
-        print datetime.datetime.now(), ": turnCarRight: ", strength
+    def turnCarRight(self, strength):
+        print(datetime.datetime.now(), ": turnCarRight: ", strength)
         self.p.set_PWM_dutycycle(Pin.RIGHT, 0)
         self.p.set_PWM_dutycycle(Pin.LEFT, strength)
 
     def disconnect(self):
-        print datetime.datetime.now(), ": disconnect"
+        print(datetime.datetime.now(), ": disconnect")
         self.p.stop()
 
     def setupPwmFrequency(self, pwm_frequency_hz):
-        print datetime.datetime.now(), ": setupPwmFrequency: ", pwm_frequency_hz
+        print(datetime.datetime.now(), ": setupPwmFrequency: ", pwm_frequency_hz)
         #sample rate default on 5 microseconds
         #set_PWM_frequency(user_gpio, frequency)
         self.p.set_PWM_frequency(Pin.FORWARD, pwm_frequency_hz)
@@ -60,26 +60,26 @@ class Piggy:
         self.p.set_PWM_frequency(Pin.RIGHT, pwm_frequency_hz)
 
     def initPiggy(self):
-        print datetime.datetime.now(), ": initPiggy..."
+        print(datetime.datetime.now(), ": initPiggy...")
         self.p = pigpio.pi("192.168.100.23", 8888)
         if not self.p.connected:
-            print "UNABLE TO CONNECT TO PIGPIO DAEMON"
+            print("UNABLE TO CONNECT TO PIGPIO DAEMON")
             exit()
-        print datetime.datetime.now(), ": Setting mode..."
+        print(datetime.datetime.now(), ": Setting mode...")
         self.p.set_mode(Pin.FORWARD, pigpio.OUTPUT)
         self.p.set_mode(Pin.REVERSE, pigpio.OUTPUT)
         self.p.set_mode(Pin.LEFT, pigpio.OUTPUT)
         self.p.set_mode(Pin.RIGHT, pigpio.OUTPUT)
-        print datetime.datetime.now(), ": clearing pins 0-31..."
+        print(datetime.datetime.now(), ": clearing pins 0-31...")
         for pin in range(0,31):
             self.p.write(pin, 0)
-        print datetime.datetime.now(), ": setting up PWM frequency..."
+        print(datetime.datetime.now(), ": setting up PWM frequency...")
         self.setupPwmFrequency(100)
     
     def runTest(self):
         waitSeconds = 10
         self.initPiggy()
-        print datetime.datetime.now(), ": running test..."
+        print(datetime.datetime.now(), ": running test...")
         self.accelerateCar(255);
         time.sleep(waitSeconds)
         self.stopCar()
@@ -91,8 +91,8 @@ class Piggy:
 
 
 class startClass:
-    print "running..."
+    print("running...")
     piggy = Piggy()
     piggy.runTest()
-    print "done!"
+    print("done!")
       
