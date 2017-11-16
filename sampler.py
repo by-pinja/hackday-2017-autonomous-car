@@ -14,6 +14,8 @@ class Sampler(object):
         self.frame = 0
         self.sequence = None
         self.last_capture = None
+        self.sequence_path = None
+        self.steering_file_path = None
         self.camera_module = CameraModule()
         self.csv_rows = []
 
@@ -39,7 +41,7 @@ class Sampler(object):
         self.last_capture = now
         self.frame += 1
         image = self.camera_module.capture()
-	filepath = os.path.join(self.sequence_path, "frame_{}.jpeg".format(self.frame))
+        filepath = os.path.join(self.sequence_path, "frame_{}.jpeg".format(self.frame))
         image.save(filepath)
         self.csv_rows.append([self.frame, propagation, steering])
         
