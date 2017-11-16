@@ -1,126 +1,147 @@
-import pygame    
-
+import pygame
+from .sampler import Sampler
 pygame.init()
 
 pygame.display.set_caption("PS4 controller listener")
 
-#Loop until the user clicks the close button.
-done = False
 
-# Used to manage how fast the screen updates
-clock = pygame.time.Clock()
+class ControlListener():
+    def __init__(self):
+        # Used to manage how fast the screen updates
+        clock = pygame.time.Clock()
 
-# Initialize the joysticks
-pygame.joystick.init()
+        # Limit to 20 frames per second
+        clock.tick(20)
 
-run_in_progress = False
+        # Initialize the joysticks
+        pygame.joystick.init()
+        run_in_progress = False
+        self.done = False
+        self.sampler = Sampler()
 
-# Start/save/discard a run
-def start_run():
-    print("Start")
+        self.sampling = False
+        # Get count of joysticks
+        joystick_count = pygame.joystick.get_count()
 
-def save_run():
-    print("Saving the run")
+        self.steering = 0
+        self.propagation = 0
 
-def discard_run():
-    print("Discarding the run")
+        # For each joystick:
+        for i in range(joystick_count):
+            joystick = pygame.joystick.Joystick(i)
+            joystick.init()
 
-# Directions (left, straight, right)
-def turn_left():
-    print("vasen")
+    def listen(self):
+        # loops all program lifecycle
+        while not self.done:
+            # EVENT PROCESSING STEP
+            for event in pygame.event.get():  # User did something
+                if event.type == pygame.QUIT:  # If user clicked close
+                    self.done = True # Flag that we are done so we exit this loop
 
-def turn_right():
-    print("oikea")
+                # Analog stick events
+                if event.type == pygame.JOYAXISMOTION:
+                    if event.axis == 5:
+                        self.analog_y_value_change(event.value)
+                    elif event.axis == 0:
+                        self.analog_x_value_change(event.value)
+                # Direction pad events
+                if event.type == pygame.JOYHATMOTION:
+                    value = event.value
+                    if value == (0, 0):
+                        self.go_straight()
+                    elif value == (-1, 0):
+                        self.turn_left()
+                    elif value == (1, 0):
+                        self.turn_right()
+                if event.type == pygame.JOYBUTTONDOWN:
+                    value = event.button
+                    # Action button events
+                    if value == 1:
+                        self.throttle()
+                    elif value == 2:
+                        self.reverse()
+                    # Start / stop events
+                    elif value == 9:
+                        if not run_in_progress:
+                            run_in_progress = True
+                            self.start_run()
+                        elif run_in_progress:
+                            run_in_progress = False
+                            self.save_run()
+                    elif value == 8:
+                        if run_in_progress:
+                            run_in_progress = False
+                            self.discard_run()
+                if event.type == pygame.JOYBUTTONUP:
+                    value = event.button
+                    if value == 1:
+                        self.release_throttle()
+                    elif value == 2:
+                        self.release_reverse()
+                if self.sampling:
+                    self.capture()
 
-def go_straight():
-    print("suoraan")
+    # Start/save/discard a run
+    def start_run(self):
+        self.sampling = True
+        self.sampler.start()
 
-# Binary value (forward, backwards, idle)
-def throttle():
-    print("kaasu")
+    def save_run(self):
+        print("Saving the run")
+        self.sampling = False
 
-def release_throttle():
-    print("kaasu pois")
+    def discard_run(self):
+        print("Discarding the run")
+        self.sampling = False
+        self.sampler.reject()
 
-def reverse():
-    print("peruutetaan")
+    def capture(self):
+        self.sampler.capture(self.steering, self.propagation)
 
-def release_reverse():
-    print("peruutus pois")
+    # Directions (left, straight, right)
+    def turn_left(self):
+        self.steering = -1
 
-# Y axis analog value (1...-1). Negative=forward, positive=backwards
-def analog_y_value_change(value):
-    # Filter the low end of singal
-    if value > 0.05 or value < -0.05:
-        print(value)    
-    
-# X axis analog value (1...-1). Positive=right, negative=left
-def analog_x_value_change(value):
-    # Filter the low end of singal
-    if value > 0.05 or value < -0.05:
-        print(value)        
+    def turn_right(self):
+        self.steering = 1
 
-while done==False:
-    # EVENT PROCESSING STEP
-    for event in pygame.event.get(): # User did something
-        if event.type == pygame.QUIT: # If user clicked close
-            done=True # Flag that we are done so we exit this loop       
-	
-        # Analog stick events
-        if event.type == pygame.JOYAXISMOTION:
-            if event.axis == 5:
-                analog_y_value_change(event.value)
-            elif event.axis == 0:
-                analog_x_value_change(event.value)
-        # Direction pad events
-        if event.type == pygame.JOYHATMOTION:
-            value = event.value
-            if value == (0, 0):
-                go_straight()
-            elif value == (-1, 0):
-                turn_left()
-            elif value == (1, 0):
-                turn_right()
-        if event.type == pygame.JOYBUTTONDOWN:
-            value = event.button
-            # Action button events
-            if value == 1:
-                throttle()
-            elif value == 2:
-                reverse()
-            # Start / stop events
-            elif value == 9:
-                if not run_in_progress:
-                    run_in_progress = True
-                    start_run()
-                elif run_in_progress:
-                    run_in_progress = False
-                    save_run()
-            elif value == 8:
-                if run_in_progress:
-                    run_in_progress = False
-                    discard_run()
-        if event.type == pygame.JOYBUTTONUP:
-            value = event.button
-            if value == 1:
-                release_throttle()
-            elif value == 2:
-                release_reverse()
-            
- 
-    # Get count of joysticks
-    joystick_count = pygame.joystick.get_count()
-    
-    # For each joystick:
-    for i in range(joystick_count):
-        joystick = pygame.joystick.Joystick(i)
-        joystick.init()
+    def go_straight(self):
+        self.steering = 0
+        print("suoraan")
 
-    # Limit to 20 frames per second
-    clock.tick(20)
-    
-# Close the window and quit.
-# If you forget this line, the program will 'hang'
-# on exit if running from IDLE.
-pygame.quit ()
+    # Binary value (forward, backwards, idle)
+    def throttle(self):
+        self.propagation = 1
+        print("kaasu")
 
+    def release_throttle(self):
+        self.propagation = 0
+        print("kaasu pois")
+
+    def reverse(self):
+        self.propagation = -1
+        print("peruutetaan")
+
+    def release_reverse(self):
+        self.propagation = 0
+        print("peruutus pois")
+
+    # Y axis analog value (1...-1). Negative=forward, positive=backwards
+    def analog_y_value_change(self, value):
+        # Filter the low end of singal
+        if value > 0.05 or value < -0.05:
+            self.propagation = value
+        else:
+            self.propagation = 0
+
+    # X axis analog value (1...-1). Positive=right, negative=left
+    def analog_x_value_change(self, value):
+        # Filter the low end of singal
+        if value > 0.05 or value < -0.05:
+            self.steering = value
+        else:
+            self.steering = 0
+
+# init
+listener = ControlListener()
