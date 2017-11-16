@@ -11,8 +11,8 @@ class ControlListener:
         # Used to manage how fast the screen updates
         clock = pygame.time.Clock()
 
-        # Limit to 20 frames per second
-        clock.tick(20)
+        # Limit to 10 frames per second
+        clock.tick(10)
 
         # Initialize the joysticks
         pygame.joystick.init()
@@ -41,6 +41,8 @@ class ControlListener:
         while not self.done:
             # EVENT PROCESSING STEP
             for event in pygame.event.get():  # User did something
+                if event is None:
+                    continue
                 if event.type == pygame.QUIT:  # If user clicked close
                     self.done = True # Flag that we are done so we exit this loop
 
@@ -50,6 +52,7 @@ class ControlListener:
                         self.analog_y_value_change(event.value)
                     elif event.axis == 0:
                         self.analog_x_value_change(event.value)
+                    self.capture()
                 # Direction pad events
                 if event.type == pygame.JOYHATMOTION:
                     value = event.value
@@ -59,6 +62,7 @@ class ControlListener:
                         self.turn_left()
                     elif value == (1, 0):
                         self.turn_right()
+                    self.capture()
                 if event.type == pygame.JOYBUTTONDOWN:
                     value = event.button
                     # Action button events
@@ -78,14 +82,15 @@ class ControlListener:
                         if self.run_in_progress:
                             self.run_in_progress = False
                             self.discard_run()
+                    self.capture()
                 if event.type == pygame.JOYBUTTONUP:
                     value = event.button
                     if value == 1:
                         self.release_throttle()
                     elif value == 2:
-                        self.release_reverse()
-                if self.sampling:
+                        self.release_reverse()                
                     self.capture()
+                    print(str(event))
 
     # Start/save/discard a run
     def start_run(self):
@@ -102,7 +107,8 @@ class ControlListener:
         self.sampler.reject()
 
     def capture(self):
-        self.sampler.capture(self.steering, self.propagation)
+        if self.sampling:
+            self.sampler.capture(self.steering, self.propagation)
 
     # Directions (left, straight, right)
     def turn_left(self):

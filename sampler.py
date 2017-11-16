@@ -8,7 +8,7 @@ from camera import CameraModule
 
 class Sampler(object):
     STORAGE_ROOT = '/home/pi/'
-    CAPTURE_INTERVAL_SECS = 0.5
+    CAPTURE_INTERVAL_SECS = 1.0
 
     def __init__(self):
         self.frame = 0
@@ -21,7 +21,7 @@ class Sampler(object):
 
     def start(self):
 	self.csv_rows = []
-        self.frame = 1
+        self.frame = 0
         self.sequence = time.strftime("%Y%m%d%H%M")
         self.sequence_path = os.path.join(self.STORAGE_ROOT, self.sequence)
         if not os.path.exists(self.sequence_path):
@@ -42,12 +42,15 @@ class Sampler(object):
         self.frame += 1
         image = self.camera_module.capture()
         filepath = os.path.join(self.sequence_path, "frame_{}.jpeg".format(self.frame))
+        print("Saving file {}".format(datetime.datetime.now()))
         image.save(filepath)
+        print("Save complete {}".format(datetime.datetime.now()))
         self.csv_rows.append([self.frame, propagation, steering])
         
     def save_run(self):
-        print('saving steering data to csv')
+        print('saving steering data to csv {}'.format(datetime.datetime.now()))
         with open(self.steering_file_path, 'w') as csvfile:
             writer = csv.writer(csvfile, delimiter=';')
             for csv_row in self.csv_rows:
                 writer.writerow(csv_row)
+        print("saved steering data {}".format(datetime.datetime.now()))
