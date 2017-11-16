@@ -6,7 +6,7 @@ import csv
 from .camera import CameraModule
 
 
-class App(object):
+class Sampler(object):
     STORAGE_ROOT = '~'
     CAPTURE_INTERVAL_SECS = 0.5
 
@@ -25,14 +25,10 @@ class App(object):
         self.steering_file_path = os.path.join(self.sequence_path, 'steering.csv')
         self.last_capture = None
 
-    def stop(self):
-        pass
-
     def reject(self):
-        self.stop()
         shutil.rmtree(self.sequence_path, ignore_errors=True)
 
-    def capture(self, gas, steering):
+    def capture(self, steering, propagation):
         now = datetime.datetime.now()
         if self.last_capture is None or (now - self.last_capture).total_seconds() < self.CAPTURE_INTERVAL_SECS:
             return
@@ -42,4 +38,4 @@ class App(object):
         image.save(os.path.join(self.sequence_path, "frame_{}".format(self.frame)))
         with open(self.steering_file_path, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=';')
-            writer.writerow([self.frame, gas, steering])
+            writer.writerow([self.frame, propagation, steering])
