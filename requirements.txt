@@ -1,1 +1,2 @@
 Pillow
+pigpio==1.38
