@@ -6,7 +6,7 @@ pygame.init()
 pygame.display.set_caption("PS4 controller listener")
 
 
-class ControlListener():
+class ControlListener:
     def __init__(self):
         # Used to manage how fast the screen updates
         clock = pygame.time.Clock()
@@ -20,7 +20,7 @@ class ControlListener():
         self.done = False
         self.sampler = Sampler()
         self.piggy = Piggy()
-	self.piggy.initPiggy()
+        self.piggy.initPiggy()
 
         self.sampling = False
         # Get count of joysticks
@@ -33,9 +33,8 @@ class ControlListener():
         for i in range(joystick_count):
             joystick = pygame.joystick.Joystick(i)
             joystick.init()
-	self.listen()
-	self.piggy.disconnect()
-
+        self.listen()
+        self.piggy.disconnect()
 
     def listen(self):
         # loops all program lifecycle
