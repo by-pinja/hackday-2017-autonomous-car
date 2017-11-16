@@ -59,9 +59,8 @@ class ControlListener:
                         self.analog_y_value_change(event.value)
                     elif event.axis == 0:
                         self.analog_x_value_change(event.value)
-                    self.capture()
                 # Direction pad events
-                if event.type == pygame.JOYHATMOTION:
+                elif event.type == pygame.JOYHATMOTION:
                     value = event.value
                     if value == (0, 0):
                         self.go_straight()
@@ -69,8 +68,7 @@ class ControlListener:
                         self.turn_left()
                     elif value == (1, 0):
                         self.turn_right()
-                    self.capture()
-                if event.type == pygame.JOYBUTTONDOWN:
+                elif event.type == pygame.JOYBUTTONDOWN:
                     value = event.button
                     # Action button events
                     if value == 1:
@@ -89,14 +87,12 @@ class ControlListener:
                         if self.run_in_progress:
                             self.run_in_progress = False
                             self.discard_run()
-                    self.capture()
-                if event.type == pygame.JOYBUTTONUP:
+                elif event.type == pygame.JOYBUTTONUP:
                     value = event.button
                     if value == 1:
                         self.release_throttle()
                     elif value == 2:
                         self.release_reverse()                
-                    self.capture()
                     print(str(event))
 
     # Start/save/discard a run
@@ -121,35 +117,42 @@ class ControlListener:
     def turn_left(self):
         self.steering = -1
         self.piggy.turnCarLeft(255)
+        self.capture()
 
     def turn_right(self):
         self.steering = 1
         self.piggy.turnCarRight(255)
+        self.capture()
 
     def go_straight(self):
         self.steering = 0
         self.piggy.turnCarLeft(0)
+        self.capture()
         print("suoraan")
 
     # Binary value (forward, backwards, idle)
     def throttle(self):
         self.propagation = 1
         self.piggy.accelerateCar(255)
+        self.capture()
         print("kaasu")
 
     def release_throttle(self):
         self.propagation = 0
         self.piggy.accelerateCar(0)
+        self.capture()
         print("kaasu pois")
 
     def reverse(self):
         self.propagation = -1
         self.piggy.reverseCar(255)
+        self.capture()
         print("peruutetaan")
 
     def release_reverse(self):
         self.propagation = 0
         self.piggy.reverseCar(0)
+        self.capture()
         print("peruutus pois")
 
     # Y axis analog value (1...-1). Negative=forward, positive=backwards
@@ -163,6 +166,7 @@ class ControlListener:
             self.piggy.accelerateCar(int(-(self.propagation)*255))
         else:
             self.piggy.reverseCar(int(self.propagation*255))
+        self.capture()
 
     # X axis analog value (1...-1). Positive=right, negative=left
     def analog_x_value_change(self, value):
@@ -175,5 +179,6 @@ class ControlListener:
             self.piggy.turnCarRight(int(self.steering*255))
         else:
             self.piggy.turnCarLeft(int(-(self.steering)*255))
+        self.capture()
 # init
 listener = ControlListener()
