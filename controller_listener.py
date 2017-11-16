@@ -93,7 +93,7 @@ class ControlListener:
         self.sampler.start()
 
     def save_run(self):
-        print("Saving the run")
+        self.sampler.save_run()
         self.sampling = False
 
     def discard_run(self):
