@@ -40,16 +40,27 @@ def _read_label_file(labelfile):
 def get_dataset():
 
     data_dir = settings.INPUT_DATA_DIR
-    print(os.listdir(data_dir))
-    file_names = [os.path.join(data_dir, i) for i in os.listdir(data_dir) if i.endswith('.jpeg')]
-    sorted_files = sorted(file_names)
+    data_directories = sorted(os.listdir(data_dir))
+    print("Data directories {}".format(data_directories))
 
-    image_files = tf.constant(sorted_files)
+    image_files = []
+    csv_files = []
+    for directory in data_directories:
+        dir = os.path.join(data_dir, directory)
+        print("Data directory {}".format(dir))
+        file_names = [os.path.join(dir, i) for i in os.listdir(dir) if i.endswith('.jpeg')]
+        sorted_files = sorted(file_names)
+        image_files += sorted_files
+        csv_files.append(os.path.join(dir, 'steering.csv'))
+
+    print("Got {} image files".format(len(image_files)))
+
+    image_files = tf.constant(image_files)
     image_dataset = tf.data.Dataset.from_tensor_slices(image_files)
     image_dataset = image_dataset.map(lambda image_file: _read_image_(image_file))
 
-    csv_file = os.path.join(settings.INPUT_DATA_DIR, 'steering.csv')
-    label_dataset = tf.data.Dataset.from_tensors(tf.constant([csv_file]))
+    csv_files = tf.constant(csv_files)
+    label_dataset = tf.data.Dataset.from_tensor_slices(csv_files)
     label_dataset = label_dataset.flat_map(lambda filename:_read_label_file(filename))
 
     return tf.data.Dataset.zip((image_dataset, label_dataset))

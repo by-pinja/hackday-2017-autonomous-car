@@ -1,13 +1,13 @@
 import tensorflow as tf
 
-INPUT_DATA_DIR = "/home/joni/temp/cartest/input/201711162007/"
+INPUT_DATA_DIR = "/home/joni/temp/cartest/input/"
 LOG_PATH = "/home/joni/temp/cartest/output/"
 MODEL_SAVE_PATH = "/home/joni/temp/cartest/model/"
 
 IMAGE_WIDTH = 320
-IMAGE_HEIGHT = 240
+IMAGE_HEIGHT = 180
 IMAGE_CHANNELS = 1
-INPUT_CROP = [0, 0, IMAGE_HEIGHT, IMAGE_WIDTH]
+INPUT_CROP = [60, 0, IMAGE_HEIGHT, IMAGE_WIDTH]
 INPUT_SHAPE = [IMAGE_HEIGHT, IMAGE_WIDTH]
 
 # Ratio of input data reserved for validation
