@@ -42,7 +42,6 @@ class Sampler(object):
         image.save(filepath)
         self.csv_rows.append([self.frame, propagation, steering])
         
-
     def save_run(self):
         print('saving steering data to csv')
         with open(self.steering_file_path, 'w') as csvfile:
