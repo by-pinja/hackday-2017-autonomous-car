@@ -6,7 +6,7 @@ from learning import settings
 
 from learning.model import SteeringModel
 
-MODEL_DIR = "/home/joni/temp/cartest/test_model2/"
+MODEL_DIR = "/home/joni/temp/cartest/test_model3/"
 
 test_file = "/home/joni/temp/cartest/input/201711162110/frame_8.jpeg"
 
@@ -34,7 +34,7 @@ with tf.name_scope("Produce"):
 pre_train_saver = tf.train.Saver(tf.trainable_variables())
 
 with tf.Session() as session:
-    meta_file = os.path.join(MODEL_DIR, "-12114")
+    meta_file = os.path.join(MODEL_DIR, "-50140")
     print("Opening file {}".format(meta_file))
 
     pre_train_saver.restore(session, meta_file)

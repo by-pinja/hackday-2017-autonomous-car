@@ -8,7 +8,7 @@ class SteeringModel:
         # output is
         input_layer = tf.layers.dense(
             inputs=input,
-            units=120,
+            units=1024,
             activity_regularizer=tf.nn.sigmoid,
             name="input",
         )
@@ -16,7 +16,7 @@ class SteeringModel:
         # Output is [x, y] (or perhaps [y, x])
         hidden = tf.layers.dense(
             inputs=input_layer,
-            units=80,
+            units=512,
             activity_regularizer=tf.nn.sigmoid,
             name="hidden"
         )
