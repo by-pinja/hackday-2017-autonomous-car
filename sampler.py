@@ -15,6 +15,7 @@ class Sampler(object):
         self.sequence = None
         self.last_capture = None
         self.camera_module = CameraModule()
+        self.csv_rows = []
 
     def start(self):
         self.frame = 1
@@ -39,6 +40,11 @@ class Sampler(object):
         image = self.camera_module.capture()
 	filepath = os.path.join(self.sequence_path, "frame_{}.jpeg".format(self.frame))
         image.save(filepath)
+        self.csv_rows.append([self.frame, propagation, steering])
+        
+    def save_run(self):
+        print('saving steering data to csv')
         with open(self.steering_file_path, 'w') as csvfile:
             writer = csv.writer(csvfile, delimiter=';')
-            writer.writerow([self.frame, propagation, steering])
+            for csv_row in self.csv_rows:
+                writer.writerow(csv_row)
