@@ -61,7 +61,8 @@ class Piggy:
 
     def initPiggy(self):
         print(datetime.datetime.now(), ": initPiggy...")
-        self.p = pigpio.pi("192.168.100.23", 8888)
+        #self.p = pigpio.pi("192.168.100.23", 8888)
+        self.p = pigpio.pi()
         if not self.p.connected:
             print("UNABLE TO CONNECT TO PIGPIO DAEMON")
             exit()
@@ -92,7 +93,7 @@ class Piggy:
 
 class startClass:
     print("running...")
-    piggy = Piggy()
-    piggy.runTest()
-    print("done!")
+#    piggy = Piggy()
+#    piggy.runTest()
+#    print("done!")
       

@@ -16,10 +16,11 @@ class ControlListener():
 
         # Initialize the joysticks
         pygame.joystick.init()
-        run_in_progress = False
+        self.run_in_progress = False
         self.done = False
         self.sampler = Sampler()
         self.piggy = Piggy()
+	self.piggy.initPiggy()
 
         self.sampling = False
         # Get count of joysticks
@@ -32,6 +33,9 @@ class ControlListener():
         for i in range(joystick_count):
             joystick = pygame.joystick.Joystick(i)
             joystick.init()
+	self.listen()
+	self.piggy.disconnect()
+
 
     def listen(self):
         # loops all program lifecycle
@@ -65,15 +69,15 @@ class ControlListener():
                         self.reverse()
                     # Start / stop events
                     elif value == 9:
-                        if not run_in_progress:
-                            run_in_progress = True
+                        if not self.run_in_progress:
+                            self.run_in_progress = True
                             self.start_run()
-                        elif run_in_progress:
-                            run_in_progress = False
+                        elif self.run_in_progress:
+                            self.run_in_progress = False
                             self.save_run()
                     elif value == 8:
-                        if run_in_progress:
-                            run_in_progress = False
+                        if self.run_in_progress:
+                            self.run_in_progress = False
                             self.discard_run()
                 if event.type == pygame.JOYBUTTONUP:
                     value = event.button
@@ -143,10 +147,10 @@ class ControlListener():
             self.propagation = value
         else:
             self.propagation = 0
-        if self.propagation >= 0:
-            self.piggy.accelerateCar(int(value*255))
+        if self.propagation < 0:
+            self.piggy.accelerateCar(int(-(self.propagation)*255))
         else:
-            self.piggy.reverseCar(int(value*255))
+            self.piggy.reverseCar(int(self.propagation*255))
 
     # X axis analog value (1...-1). Positive=right, negative=left
     def analog_x_value_change(self, value):
@@ -156,8 +160,8 @@ class ControlListener():
         else:
             self.steering = 0
         if self.steering >= 0:
-            self.piggy.turnCarRight(int(value*255))
+            self.piggy.turnCarRight(int(self.steering*255))
         else:
-            self.piggy.turnCarLeft(int(value*255))
+            self.piggy.turnCarLeft(int(-(self.steering)*255))
 # init
 listener = ControlListener()

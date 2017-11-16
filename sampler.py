@@ -7,7 +7,7 @@ from camera import CameraModule
 
 
 class Sampler(object):
-    STORAGE_ROOT = '~'
+    STORAGE_ROOT = '/home/pi/'
     CAPTURE_INTERVAL_SECS = 0.5
 
     def __init__(self):
@@ -29,13 +29,16 @@ class Sampler(object):
         shutil.rmtree(self.sequence_path, ignore_errors=True)
 
     def capture(self, steering, propagation):
+        print("capture")
         now = datetime.datetime.now()
-        if self.last_capture is None or (now - self.last_capture).total_seconds() < self.CAPTURE_INTERVAL_SECS:
+        if self.last_capture is not None and (now - self.last_capture).total_seconds() < self.CAPTURE_INTERVAL_SECS:
+            print("skipping capture")
             return
         self.last_capture = now
         self.frame += 1
         image = self.camera_module.capture()
-        image.save(os.path.join(self.sequence_path, "frame_{}".format(self.frame)))
-        with open(self.steering_file_path, 'w', newline='') as csvfile:
+	filepath = os.path.join(self.sequence_path, "frame_{}.jpeg".format(self.frame))
+        image.save(filepath)
+        with open(self.steering_file_path, 'w') as csvfile:
             writer = csv.writer(csvfile, delimiter=';')
             writer.writerow([self.frame, propagation, steering])
