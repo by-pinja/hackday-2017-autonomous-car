@@ -1,6 +1,6 @@
 import pygame
-from .sampler import Sampler
-from .piggy import Piggy
+from sampler import Sampler
+from piggy import Piggy
 pygame.init()
 
 pygame.display.set_caption("PS4 controller listener")

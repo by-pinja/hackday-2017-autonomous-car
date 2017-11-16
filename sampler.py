@@ -3,7 +3,7 @@ import datetime
 import os
 import shutil
 import csv
-from .camera import CameraModule
+from camera import CameraModule
 
 
 class Sampler(object):

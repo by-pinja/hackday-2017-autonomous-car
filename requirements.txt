@@ -2,3 +2,4 @@ Pillow
 pigpio==1.38
 ds4drv
 pygame
+picamera
