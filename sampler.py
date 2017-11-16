@@ -20,7 +20,7 @@ class Sampler(object):
         self.csv_rows = []
 
     def start(self):
-	self.csv_rows = []
+        self.csv_rows = []
         self.frame = 0
         self.sequence = time.strftime("%Y%m%d%H%M")
         self.sequence_path = os.path.join(self.STORAGE_ROOT, self.sequence)
