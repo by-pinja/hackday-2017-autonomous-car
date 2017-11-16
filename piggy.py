@@ -39,12 +39,12 @@ class Piggy:
     def turnCarLeft(self, strength):
         print(datetime.datetime.now(), ": turnCarLeft: ", strength)
         self.p.set_PWM_dutycycle(Pin.RIGHT, 0)
-        self.p.set_PWM_dutycycle(Pin.LEFT, strength)
+        self.p.set_PWM_dutycycle(Pin.LEFT, round(strength))
 
     def turnCarRight(self, strength):
         print(datetime.datetime.now(), ": turnCarRight: ", strength)
         self.p.set_PWM_dutycycle(Pin.LEFT, 0)
-        self.p.set_PWM_dutycycle(Pin.RIGHT, strength)
+        self.p.set_PWM_dutycycle(Pin.RIGHT, round(strength))
 
     def disconnect(self):
         print(datetime.datetime.now(), ": disconnect")
