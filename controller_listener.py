@@ -2,7 +2,7 @@ import pygame
 from sampler import Sampler
 from piggy import Piggy
 pygame.init()
-
+pygame.display.set_mode((320, 240))
 pygame.display.set_caption("PS4 controller listener")
 
 
@@ -35,10 +35,10 @@ class ControlListener:
             joystick.init()
         
         # Set event types that can enter the queue
-        pygame.set_allowed(None)
-        pygame.event.set_allowed(
-            [pygame.JOYAXISMOTION, pygame.JOYHATMOTION, pygame.JOYBUTTONDOWN, pygame.JOYBUTTONUP]
-        )
+        #pygame.set_allowed(None)
+        #pygame.event.set_allowed(
+        #    [pygame.JOYAXISMOTION, pygame.JOYHATMOTION, pygame.JOYBUTTONDOWN, pygame.JOYBUTTONUP]
+        #)
 
         self.listen()
         self.piggy.disconnect()
