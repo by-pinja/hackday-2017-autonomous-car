@@ -33,6 +33,13 @@ class ControlListener:
         for i in range(joystick_count):
             joystick = pygame.joystick.Joystick(i)
             joystick.init()
+        
+        # Set event types that can enter the queue
+        pygame.set_allowed(None)
+        pygame.event.set_allowed(
+            [pygame.JOYAXISMOTION, pygame.JOYHATMOTION, pygame.JOYBUTTONDOWN, pygame.JOYBUTTONUP]
+        );
+
         self.listen()
         self.piggy.disconnect()
 
