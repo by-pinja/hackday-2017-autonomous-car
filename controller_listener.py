@@ -1,5 +1,6 @@
 import pygame
 from .sampler import Sampler
+from .piggy import Piggy
 pygame.init()
 
 pygame.display.set_caption("PS4 controller listener")
@@ -18,6 +19,7 @@ class ControlListener():
         run_in_progress = False
         self.done = False
         self.sampler = Sampler()
+        self.piggy = Piggy()
 
         self.sampling = False
         # Get count of joysticks
@@ -102,29 +104,36 @@ class ControlListener():
     # Directions (left, straight, right)
     def turn_left(self):
         self.steering = -1
+        self.piggy.turnCarLeft(255)
 
     def turn_right(self):
         self.steering = 1
+        self.piggy.turnCarRight(255)
 
     def go_straight(self):
         self.steering = 0
+        self.piggy.turnCarLeft(0)
         print("suoraan")
 
     # Binary value (forward, backwards, idle)
     def throttle(self):
         self.propagation = 1
+        self.piggy.accelerateCar(255)
         print("kaasu")
 
     def release_throttle(self):
         self.propagation = 0
+        self.piggy.accelerateCar(0)
         print("kaasu pois")
 
     def reverse(self):
         self.propagation = -1
+        self.piggy.reverseCar(255)
         print("peruutetaan")
 
     def release_reverse(self):
         self.propagation = 0
+        self.piggy.reverseCar(0)
         print("peruutus pois")
 
     # Y axis analog value (1...-1). Negative=forward, positive=backwards
@@ -134,6 +143,10 @@ class ControlListener():
             self.propagation = value
         else:
             self.propagation = 0
+        if self.propagation >= 0:
+            self.piggy.accelerateCar(int(value*255))
+        else:
+            self.piggy.reverseCar(int(value*255))
 
     # X axis analog value (1...-1). Positive=right, negative=left
     def analog_x_value_change(self, value):
@@ -142,6 +155,9 @@ class ControlListener():
             self.steering = value
         else:
             self.steering = 0
-
+        if self.steering >= 0:
+            self.piggy.turnCarRight(int(value*255))
+        else:
+            self.piggy.turnCarLeft(int(value*255))
 # init
 listener = ControlListener()
