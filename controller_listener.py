@@ -35,7 +35,7 @@ class ControlListener:
             joystick.init()
         
         # Set event types that can enter the queue
-        pygame.set_allowed(None)
+        pygame.event.set_allowed(None)
         pygame.event.set_allowed(
             [pygame.JOYAXISMOTION, pygame.JOYHATMOTION, pygame.JOYBUTTONDOWN, pygame.JOYBUTTONUP]
         )
