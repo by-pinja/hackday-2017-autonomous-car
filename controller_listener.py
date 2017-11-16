@@ -38,7 +38,7 @@ class ControlListener:
         pygame.set_allowed(None)
         pygame.event.set_allowed(
             [pygame.JOYAXISMOTION, pygame.JOYHATMOTION, pygame.JOYBUTTONDOWN, pygame.JOYBUTTONUP]
-        );
+        )
 
         self.listen()
         self.piggy.disconnect()
