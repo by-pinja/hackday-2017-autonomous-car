@@ -15,3 +15,9 @@ class CameraModule:
         self.camera.capture(stream, format='jpeg')
         stream.seek(0)
         return Image.open(stream)
+
+    def capture_image_string(self):
+        stream = BytesIO()
+        self.camera.capture(stream, format='jpeg')
+        stream.seek(0)
+        return stream.getvalue()
