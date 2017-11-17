@@ -31,7 +31,7 @@ class AiClient:
 
     def start_loop(self):
 
-        while(True):
+        while True:
             image_data = self.camera_module.capture()
 
             imgByteArr = io.BytesIO()
@@ -60,7 +60,7 @@ class AiClient:
         print(response)
         if "," in response:
             steering, propagation = response.split(",")
-            return (steering, propagation)
+            return steering, propagation
         else:
             print("Could not process response %" % response)
             return None
