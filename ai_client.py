@@ -1,5 +1,6 @@
 import socket
 import sys
+import io
 
 from camera import CameraModule
 from piggy import Piggy
@@ -32,8 +33,12 @@ class AiClient:
 
         while(True):
             image_data = self.camera_module.capture()
-            image_bytes = bytearray(image_data.read())
-            response = self.request_data(image_bytes)
+
+            imgByteArr = io.BytesIO()
+            image_data.save(imgByteArr, format='jpeg')
+            imgByteArr = imgByteArr.getvalue()
+
+            response = self.request_data(imgByteArr)
             steer_piggy(response)
     
     def steer_piggy(instruction):
