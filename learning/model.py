@@ -13,23 +13,24 @@ class SteeringModel:
             name="input",
         )
 
-        # Output is [x, y] (or perhaps [y, x])
         hidden = tf.layers.dense(
             inputs=input_layer,
             units=512,
             activity_regularizer=tf.nn.sigmoid,
-            name="hidden"
+            name="hidden",
         )
 
         hidden2 = tf.layers.dense(
             inputs=hidden,
-            units=1,
+            units=2,
             activity_regularizer=tf.nn.sigmoid,
             name="hidden2"
         )
 
+        print("hidden2 shape {}".format(hidden2.shape))
+        shaped = tf.reshape(hidden2, [1, 380])
         self._outputs = tf.layers.dense(
-                inputs=tf.transpose(hidden2),
+                inputs=shaped,
                 units=2,
                 activity_regularizer=tf.nn.sigmoid,
                 name="output"
