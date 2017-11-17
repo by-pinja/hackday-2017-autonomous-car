@@ -5,6 +5,7 @@ import os
 from learning import settings
 from learning.model import SteeringModel
 
+
 class Predictor(object):
     def __init__(self, modelpath):
         with tf.name_scope("Produce"):

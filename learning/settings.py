@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-INPUT_DATA_DIR = "/home/joni/temp/cartest/input/201711162007/"
+INPUT_DATA_DIR = "/home/joni/temp/cartest/input/"
 LOG_PATH = "/home/joni/temp/cartest/output/"
 MODEL_SAVE_PATH = "/home/joni/temp/cartest/model/"
 

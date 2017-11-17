@@ -39,7 +39,7 @@ def get_cost(model, targets, training_config):
         tf.cast(targets, settings.DATATYPE),
         model.output
     )
-    cost = tf.reduce_sum(loss) / training_config.batch_size
+    cost = tf.reduce_sum(loss) / 2
 
     return cost
 
