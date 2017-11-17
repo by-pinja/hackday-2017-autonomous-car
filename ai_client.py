@@ -35,7 +35,7 @@ class AiClient:
 
         while(True):
             image_data = self.camera_module.capture()
-            output = StringIO.StringIO()
+            output = StringIO()
             image_data.save(output)
             contents = output.getvalue()
             output.close()
