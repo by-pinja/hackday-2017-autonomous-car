@@ -1,4 +1,3 @@
-
 import tensorflow as tf
 
 
@@ -30,10 +29,10 @@ class SteeringModel:
         print("hidden2 shape {}".format(hidden2.shape))
         shaped = tf.reshape(hidden2, [1, 380])
         self._outputs = tf.layers.dense(
-                inputs=shaped,
-                units=2,
-                activity_regularizer=tf.nn.sigmoid,
-                name="output"
+            inputs=shaped,
+            units=2,
+            activity_regularizer=tf.nn.sigmoid,
+            name="output"
         )
 
 
