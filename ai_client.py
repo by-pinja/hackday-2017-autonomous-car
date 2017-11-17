@@ -34,13 +34,8 @@ class AiClient:
     def start_loop(self):
 
         while(True):
-            image_data = self.camera_module.capture()
-            output = StringIO()
-            image_data.save(output)
-            contents = output.getvalue()
-            output.close()
-
-            response = self.request_data(contents)
+            image_data = self.camera_module.capture_image_string()
+            response = self.request_data(image_data)
             steer_piggy(response)
     
     def steer_piggy(instruction):
