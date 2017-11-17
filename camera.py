@@ -20,5 +20,4 @@ class CameraModule:
         stream = BytesIO()
         self.camera.capture(stream, format='jpeg')
         stream.seek(0)
-        byte_str = stream.read()
-        return byte_str.decode('UTF-8')
+        return stream.getvalue()

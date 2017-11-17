@@ -33,10 +33,10 @@ class AiClient:
 
     def start_loop(self):
 
-        while(True):
-            image_data = self.camera_module.capture_image_string()
-            response = self.request_data(image_data)
-            steer_piggy(response)
+       while(True):
+           image_data = self.camera_module.capture_image_string()
+           response = self.request_data(image_data)
+           steer_piggy(response)
     
     def steer_piggy(instruction):
         if instruction:
@@ -53,7 +53,8 @@ class AiClient:
 
         print('sending "%s"' % message)
         self.sock.sendall(message)
-
+        self.sock.sendall("EOM")
+        print('all sent')
         response = self.sock.recv(4096)
         print(response)
         if "," in response:
