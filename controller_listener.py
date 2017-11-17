@@ -1,9 +1,9 @@
 import pygame
 from sampler import Sampler
 from piggy import Piggy
+import os
+os.environ["SDL_VIDEODRIVER"] = "dummy"
 pygame.init()
-pygame.display.set_mode((320, 240))
-pygame.display.set_caption("PS4 controller listener")
 
 
 class ControlListener:
