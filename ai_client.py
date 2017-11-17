@@ -1,8 +1,6 @@
 import socket
 import sys
 import io
-import base64
-from io import StringIO 
 
 from camera import CameraModule
 from piggy import Piggy
@@ -15,7 +13,7 @@ class AiClient:
         self.ip = ip
         self.port = int(port)
         print("ip: %s, port: %s" % (self.ip, self.port))
-   
+
         # Create a TCP/IP socket
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -33,12 +31,17 @@ class AiClient:
 
     def start_loop(self):
 
-        while(True):
-            image_data = self.camera_module.capture_image_string()
-            response = self.request_data(image_data)
-            steer_piggy(response)
-    
-    def steer_piggy(instruction):
+        while True:
+            image_data = self.camera_module.capture()
+
+            imgByteArr = io.BytesIO()
+            image_data.save(imgByteArr, format='jpeg')
+            imgByteArr = imgByteArr.getvalue()
+
+            response = self.request_data(imgByteArr)
+            self.steer_piggy(response)
+
+    def steer_piggy(self, instruction):
         if instruction:
             # Steer the car
             if instruction[0] < 0:
@@ -47,8 +50,7 @@ class AiClient:
                 self.piggy.turnCarRight(255)
             # Control acceleration
             self.piggy.accelerateCar(int(-(instruction[1])*255))
-          
-            
+
     def request_data(self, message):
 
         print('sending "%s"' % message)
@@ -58,7 +60,7 @@ class AiClient:
         print(response)
         if "," in response:
             steering, propagation = response.split(",")
-            return (steering, propagation)
+            return steering, propagation
         else:
             print("Could not process response %" % response)
             return None
@@ -66,4 +68,3 @@ class AiClient:
 if __name__=='__main__':
     AiClient(sys.argv[1], sys.argv[2])
 
- 
