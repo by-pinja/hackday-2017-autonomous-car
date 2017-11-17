@@ -32,7 +32,8 @@ class AiClient:
 
         while(True):
             image_data = self.camera_module.capture()
-            response = self.request_data(image_data)
+            image_bytes = bytearray(image_data.read())
+            response = self.request_data(image_bytes)
             steer_piggy(response)
     
     def steer_piggy(instruction):
