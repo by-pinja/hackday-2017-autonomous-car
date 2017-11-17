@@ -1,4 +1,5 @@
 import pygame
+# import threading
 from sampler import Sampler
 from piggy import Piggy
 pygame.init()
@@ -16,6 +17,8 @@ class ControlListener:
 
         # Initialize the joysticks
         pygame.joystick.init()
+        # Thread pool
+        # self.threads = []
         self.run_in_progress = False
         self.done = False
         self.sampler = Sampler()
@@ -112,6 +115,19 @@ class ControlListener:
     def capture(self):
         if self.sampling:
             self.sampler.capture(self.steering, self.propagation)
+            # OPTIONAL MULTITHREADED IMAGE CAPTURING
+            # capture_thread = threading.Thread(target=self.sampler.capture, args=(self.steering, self.propagation, ))
+            # self.threads.append(capture_thread)
+            # capture_thread.start()
+            # print("thread started")
+            # print("starting threads: " + str(len(self.threads)))
+            # if len(self.threads) > 2:
+            #    for thread in self.threads:
+            #        thread.join()
+            #        print("thread waiting")
+            #        print("threads waiting: " + str(len(self.threads)))
+            #    self.threads = []
+
 
     # Directions (left, straight, right)
     def turn_left(self):
